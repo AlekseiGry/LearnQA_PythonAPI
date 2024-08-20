@@ -1,4 +1,4 @@
-import requests, json
+import requests, json, time
 
 #Ex4: GET-запрос
 response = requests.get('https://playground.learnqa.ru/api/get_text')
@@ -62,3 +62,43 @@ for method in methods:
     response = requests.delete(url, data={'method': method})
     cheker(method, req_method, response)
 
+# Ex8: Токены
+import json.decoder as JSONDecodeError
+
+url = 'https://playground.learnqa.ru/ajax/api/longtime_job'
+
+def get_longtime_job(url):
+    response = requests.get(url)
+    try:
+        obj = response.json()
+        sleep_time = int(obj['seconds'])
+        token = obj['token']
+    except JSONDecodeError:
+        return 'JSONDecodeError in first requests'
+        
+    #print(sleep_time)
+    #print(token)
+
+    response = requests.get(url, params={'token':token})
+    
+    try:
+        obj = response.json()
+        if obj['status'] != 'Job is NOT ready':
+            return 'status: unexpected answer'
+    except JSONDecodeError:
+        return 'JSONDecodeError in seconde requests'
+
+    time.sleep(sleep_time)
+
+    response = requests.get(url, params={'token':token})
+    
+    try:
+        obj = response.json()
+        result = obj['result']
+    except JSONDecodeError:
+        return 'JSONDecodeError in final requests'
+        
+    return result
+
+
+print(get_longtime_job(url))
