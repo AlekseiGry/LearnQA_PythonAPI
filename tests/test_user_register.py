@@ -7,7 +7,7 @@ class TestUserRegister(BaseCase):
     def test_create_user_with_existing_email(self):
         email = 'vinkotov@example.com'
         
-        data = self.data_preparator('email', email)
+        data = self.preapare_registration_data(email)
         response = requests.post('https://playground.learnqa.ru/api/user/', data)
 
         assert response.status_code == 400, f"Unexpected statis code {response.status_code}"
@@ -15,7 +15,7 @@ class TestUserRegister(BaseCase):
 
     def test_create_user_with_invalid_email(self):
         email = 'vinkotov.example.com'
-        data = self.data_preparator('email', email)
+        data = self.preapare_registration_data(email)
         response = requests.post('https://playground.learnqa.ru/api/user/', data)
 
         assert response.status_code == 400, f"Unexpected statis code {response.status_code}"
@@ -24,7 +24,7 @@ class TestUserRegister(BaseCase):
     @pytest.mark.parametrize('key', ['password','username','firstName','lastName','email'])
     def test_create_user_without_fild(self, key):
         email = 'withoutfild@example.com'
-        data = self.data_preparator('email', email)
+        data = self.preapare_registration_data(email)
         del data[key]
         
         response = requests.post('https://playground.learnqa.ru/api/user/', data)

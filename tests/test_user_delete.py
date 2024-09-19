@@ -1,4 +1,4 @@
-import pytest
+import pytest, allure
 from lib.base_case import BaseCase
 from lib.my_requests import MyRequests
 
@@ -37,7 +37,7 @@ class TestUserDelete(BaseCase):
         response4 = MyRequests.get(f"/user/{user_id}")
         assert response4.status_code == 404, f"Unexpected status code {response4.status_code}"
 
-
+    @allure.description("Some times failed on prod")
     def test_delete_user_authorized_as_another_user(self):
         first_user_data = self.preapare_registration_data()
         response_first_user = MyRequests.post("/user/", data=first_user_data)

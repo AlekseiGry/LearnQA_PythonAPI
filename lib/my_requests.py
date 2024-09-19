@@ -1,4 +1,4 @@
-import requests
+import requests, allure
 from lib.logger import Logger
 from environment import ENV_OBJECT
 
@@ -32,21 +32,22 @@ class MyRequests():
             cookies = {}
 
         Logger.add_request(url, data, headers, cookies, method)
+        
+        with allure.step(f"execution request {method} to {url}"):
+            if method == 'GET':
+                response = requests.get(url, params=data, headers=headers, cookies=cookies)
 
-        if method == 'GET':
-            response = requests.get(url, params=data, headers=headers, cookies=cookies)
+            elif method == 'POST':
+                response = requests.post(url, data=data, headers=headers, cookies=cookies)
 
-        elif method == 'POST':
-            response = requests.post(url, data=data, headers=headers, cookies=cookies)
+            elif method == 'PUT':
+                response = requests.put(url, data=data, headers=headers, cookies=cookies)
 
-        elif method == 'PUT':
-            response = requests.put(url, data=data, headers=headers, cookies=cookies)
+            elif method == 'DELETE':
+                response = requests.delete(url, data=data, headers=headers, cookies=cookies)
 
-        elif method == 'DELETE':
-            response = requests.delete(url, data=data, headers=headers, cookies=cookies)
-
-        else:
-            raise Exception(f"Bad HTTP method '{method}' was recieved")
+            else:
+                raise Exception(f"Bad HTTP method '{method}' was recieved")
         
         Logger.add_response(response)
 
